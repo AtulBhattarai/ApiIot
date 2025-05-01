@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 # MongoDB connection string
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+MONGO_URI = os.getenv("MONGO_URI")
 
 # Connect to MongoDB
 client = MongoClient(MONGO_URI)
@@ -18,4 +18,3 @@ db = client.smart_kitchen_db
 
 # Create/Get collections
 sensor_data_collection = db.sensor_data
-# alerts_collection = db.alerts

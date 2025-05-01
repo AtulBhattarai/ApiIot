@@ -5,15 +5,6 @@ from .models import SensorData
 from datetime import datetime
 from bson import ObjectId
 
-# Insert sensor data
-# def insert_sensor_data(data: SensorData):
-#     record = data.dict()
-
-#     record["timestamp"] = datetime.utcnow()
-#     print(record)
-#     sensor_data_collection.insert_one(record)
-#     return record
-
 def insert_sensor_data(data: SensorData):
     # Convert data to dictionary
     record = data.dict()
@@ -25,24 +16,16 @@ def insert_sensor_data(data: SensorData):
     # Prepare the response
     response = {
         "id": str(result.inserted_id),
-        "gas_level": record["gas_level"],
-        "smoke_level": record["smoke_level"],
         "temperature": record["temperature"],
+        "humidity": record["humidity"],
+        "mq2": record["mq2"],
+        "mq135": record["mq135"],
+        "fire": record["fire"],
         "timestamp": record["timestamp"]
     }
     return response
 
-# Get recent sensor data
-# def get_recent_sensor_data(limit: int = 10):
-#     # records = sensor_data_collection.find().sort("timestamp", -1).limit(limit)
-#     records = sensor_data_collection.find()
-#     print(records)
-
-#     return records
-
-
-
-def get_recent_sensor_data(limit: int = 10):
+def get_10_recent_sensor_data(limit: int = 10):
     # Fetch records, sort by latest timestamp
     records = sensor_data_collection.find().sort("timestamp", -1).limit(limit)
 
@@ -55,14 +38,15 @@ def get_recent_sensor_data(limit: int = 10):
     return result
 
 
-# # Insert an alert
-# def insert_alert(alert: Alert):
-#     record = alert.dict()
-#     record["timestamp"] = datetime.utcnow()
-#     alerts_collection.insert_one(record)
-#     return record
+def get_latest_sensor_data(limit: int = 1):
+    # Fetch records, sort by latest timestamp
+    records = sensor_data_collection.find().sort("timestamp", -1).limit(limit)
 
-# # Get recent alerts
-# def get_recent_alerts(limit: int = 10):
-#     records = alerts_collection.find().sort("timestamp", -1).limit(limit)
-#     return list(records)
+    # Convert cursor to list and clean ObjectId
+    result = []
+    for record in records:
+        record["_id"] = str(record["_id"])  # Convert ObjectId to string
+        result.append(record)
+
+    return result
+

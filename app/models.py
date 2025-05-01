@@ -5,12 +5,9 @@ from typing import Optional
 from datetime import datetime
 
 class SensorData(BaseModel):
-    gas_level: float
-    smoke_level: float
-    temperature: float
+    temperature: str
+    humidity: str
+    mq2: str
+    mq135: str
+    fire: str 
     timestamp: Optional[datetime] = None
-
-# class Alert(BaseModel):
-#     message: str
-#     level: str  # example: "warning", "critical"
-#     timestamp: Optional[datetime] = None
