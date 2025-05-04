@@ -1,9 +1,11 @@
 # app/main.py
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from .models import SensorData
 from . import crud
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, EmailStr
+from app.email_utils import send_email_background
 
 app = FastAPI()
 
@@ -39,3 +41,18 @@ def get_latest_sensor_data():
     data = crud.get_latest_sensor_data()
     print(data)
     return {"status": "success", "data": data}
+
+class EmailSchema(BaseModel):
+    email: EmailStr
+    subject: str
+    body: str
+
+@app.post("/send-email/")
+async def send_email(email_data: EmailSchema, background_tasks: BackgroundTasks):
+    background_tasks.add_task(
+        send_email_background,
+        email=email_data.email,
+        subject=email_data.subject,
+        body=email_data.body
+    )
+    return {"message": "Email has been sent in the background"}

@@ -4,3 +4,4 @@ sqlalchemy
 pydantic
 python-dotenv
 pymongo
+pydantic[email]
